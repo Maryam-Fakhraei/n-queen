@@ -1,3 +1,6 @@
+from termcolor import *
+from time import *
+
 class ChessBoard:
     def __init__(self, n):
         self.n = n 
@@ -61,6 +64,7 @@ class ChessBoard:
 
 def solve_n_queen(n):
     board = ChessBoard(n)
+    number_of_solutions = 0
 
     row = 0
     column = 0
@@ -68,7 +72,7 @@ def solve_n_queen(n):
     while True:
         # place queen in next row
         while column < n:
-            if board.is_this_column_safe_in_next_row(column):
+            if board.is_this_column_safe_in_next_row(column):   
                 board.place_in_next_row(column)
                 row += 1
                 column = 0
@@ -80,10 +84,43 @@ def solve_n_queen(n):
         if (column == n or row == n):
             # if board is full, we have a solution
             if row == n:
+                sleep(1)
                 board.display()
                 print()
+                number_of_solutions += 1
                 board.remove_in_current_row()
                 row -= 1
 
-size = int(input('Enter Queen Count : '))
-solve_n_queen(size)
+                # now backtrack
+            try:
+                prev_column = board.remove_in_current_row()
+            except IndexError:
+                # all queens removed
+                # thus no more possible configurations
+                break
+            # try previous row again
+            row -= 1
+            # start checking at column = (1 + value of column in previous row)
+            column = 1 + prev_column
+
+    sleep(1)
+    print(colored(">>> Number of solutions: %s \n" %(number_of_solutions), "cyan"))
+    print("-----------------------------------------------")
+
+# Communication with the user
+print(colored("===> Welcome to N Queen Solver <=== \n", "light_yellow", attrs=["bold"]))
+
+# Get disk count from user
+print("-----------------------------------------------")
+size = int(input(colored('Enter Queen count : ', "light_green")))
+print()
+
+# Run until user enter 0
+while size != 0:
+    solve_n_queen(size)
+    sleep(1)
+    size = int(input(colored("Enter queen count (enter 0 if you want to exit) : ", "light_green")))
+    print()
+    
+# Developers
+print(colored("\nThank you for choosing us :)\n>>>Developed by Maryam Fakhraei and Amirhossein Naseri<<<", "light_magenta"))
