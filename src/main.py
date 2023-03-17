@@ -47,7 +47,17 @@ class ChessBoard:
     def place_in_next_row(self, column):
         self.queen_place_columns.append(column)
     
+    def display(self):
+        for row in range(self.n):
+            for column in range(self.n):
+                if column == self.queen_place_columns[row]:
+                    print('Q', end=' ')
+                else:
+                    print('.', end=' ')
+            print()
     
+    def remove_in_current_row(self):
+        return self.queen_place_columns.pop()
 
 def solve_n_queen(n):
     board = ChessBoard(n)
@@ -66,5 +76,14 @@ def solve_n_queen(n):
             else:
                 column += 1
 
-size = int(input('Enter queen count : '))
+        # if could not find column to place in or if board is full
+        if (column == n or row == n):
+            # if board is full, we have a solution
+            if row == n:
+                board.display()
+                print()
+                board.remove_in_current_row()
+                row -= 1
+
+size = int(input('Enter Queen Count : '))
 solve_n_queen(size)
